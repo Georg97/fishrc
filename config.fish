@@ -1,4 +1,3 @@
-alias batp='cat /sys/class/power_supply/BAT0/capacity'
 if status is-interactive
     # Commands to run in interactive sessions can go here
 end
@@ -19,6 +18,12 @@ function fish_prompt
     set_color $fish_color_cwd
     printf '%s' (prompt_pwd)
     set_color normal
+
+    set -l git_prompt (fish_git_prompt '%s')
+    if test -n $git_prompt
+        set_color cyan
+        printf " ($git_prompt)"
+    end
 
     # Line 2
     echo
