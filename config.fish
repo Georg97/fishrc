@@ -32,7 +32,23 @@ function fish_prompt
         #if test -n "$git_status"
         #    set git_prompt "$git_prompt x"
         #end
-        printf " ($git_prompt ↑($npush) | ↓($npull))"
+        printf " ($git_prompt"
+        if test $npush -gt 0
+            set_color blue
+            printf " ↑$npush"
+            set_color cyan
+        end
+        if test $npull -gt 0
+            set_color yellow
+            printf " ↓$npull)"
+            set_color cyan
+        end
+        if test $npush -eq 0 -a $npull -eq 0
+            set_color green
+            printf " ✓"
+            set_color cyan
+        end
+        printf ")"
     end
 
     # Line 2
