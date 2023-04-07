@@ -24,7 +24,7 @@ function fish_prompt
         set_color cyan
         set -l push_pull_status ""
         set -l git_status (git status --porcelain)
-        if test -n $git_status
+        if test -n "$git_status"
             set git_prompt "$git_prompt x"
         end
         printf " ($git_prompt)"
