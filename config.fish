@@ -23,33 +23,38 @@ function fish_prompt
     if test -n "$is_git_repo"
         set_color cyan
         set -l cur_branch (git rev-parse --abbrev-ref HEAD)
-        set -l upstream (git rev-parse --abbrev-ref --symbolic-full-name @{u})
-        set -l change_matrix (git rev-list --left-right --count $cur_branch...$upstream | string split \t)
-        set -l npush $change_matrix[1]
-        set -l npull $change_matrix[2]
-        set -l nchanges (git status --porcelain | wc -l)
-        printf " ($cur_branch"
-        if test $npush -gt 0
-            set_color blue
-            printf " ↑$npush"
-            set_color cyan
+        set -l upstream (git rev-parse --abbrev-ref --symbolic-full-name @{u} 2>/dev/null)
+        if test -n "$upstream"
+
+            set -l change_matrix (git rev-list --left-right --count $cur_branch...$upstream | string split \t)
+            set -l npush $change_matrix[1]
+            set -l npull $change_matrix[2]
+            set -l nchanges (git status --porcelain | wc -l)
+            printf " ($cur_branch"
+            if test $npush -gt 0
+                set_color blue
+                printf " ↑$npush"
+                set_color cyan
+            end
+            if test $npull -gt 0
+                set_color yellow
+                printf " ↓$npull"
+                set_color cyan
+            end
+            if test $nchanges -gt 0
+                set_color red
+                printf " ↑↓$nchanges" 
+                set_color cyan
+            end
+            if test $npush -eq 0 -a $npull -eq 0 -a $nchanges -eq 0
+                set_color green
+                printf " ✓"
+                set_color cyan
+            end
+            printf ")"
+        else
+            printf " (%s)" $cur_branch
         end
-        if test $npull -gt 0
-            set_color yellow
-            printf " ↓$npull"
-            set_color cyan
-        end
-        if test $nchanges -gt 0
-            set_color red
-            printf " ↑↓$nchanges" 
-            set_color cyan
-        end
-        if test $npush -eq 0 -a $npull -eq 0 -a $nchanges -eq 0
-            set_color green
-            printf " ✓"
-            set_color cyan
-        end
-        printf ")"
     end
 
     set -l ram_usage (free -h | awk 'NR==2{print $3 "/" $2}')
