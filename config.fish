@@ -28,6 +28,7 @@ function fish_prompt
         set -l change_matrix (git rev-list --left-right --count $cur_branch...$upstream | string split \t)
         set -l npush $change_matrix[1]
         set -l npull $change_matrix[2]
+        set -l nchanges (git status --porcelain | wc -l)
         #set -l git_status (git status --porcelain)
         #if test -n "$git_status"
         #    set git_prompt "$git_prompt x"
@@ -40,12 +41,17 @@ function fish_prompt
         end
         if test $npull -gt 0
             set_color yellow
-            printf " ↓$npull)"
+            printf " ↓$npull"
             set_color cyan
         end
         if test $npush -eq 0 -a $npull -eq 0
-            set_color green
-            printf " ✓"
+            if test $nchanges -gt 0
+                set_color yellow
+                printf " ↑↓$nchanges" 
+            else
+                set_color green
+                printf " ✓"
+            end
             set_color cyan
         end
         printf ")"
