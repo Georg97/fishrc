@@ -44,14 +44,14 @@ function fish_prompt
             printf " ↓$npull"
             set_color cyan
         end
-        if test $npush -eq 0 -a $npull -eq 0
-            if test $nchanges -gt 0
-                set_color yellow
-                printf " ↑↓$nchanges" 
-            else
-                set_color green
-                printf " ✓"
-            end
+        if test $nchanges -gt 0
+            set_color red
+            printf " ↑↓$nchanges" 
+            set_color cyan
+        end
+        if test $npush -eq 0 -a $npull -eq 0 -a $nchanges -eq 0
+            set_color green
+            printf " ✓"
             set_color cyan
         end
         printf ")"
