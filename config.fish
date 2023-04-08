@@ -52,6 +52,9 @@ function fish_prompt
         printf ")"
     end
 
+    set -l ram_usage (free -h | awk 'NR==2{print $3 "/" $2}')
+    set_color magenta
+    printf " $ram_usage"
     # Line 2
     echo
     if test -n "$VIRTUAL_ENV"
