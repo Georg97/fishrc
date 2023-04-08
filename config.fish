@@ -64,6 +64,6 @@ function fish_prompt
     set_color normal
 end
 function fish_right_prompt
-    printf '%s %s%s' (date +%H:%M) (batp) %
+    printf '%s %s%s' (date +%H:%M) (get_batp)
 end
 
