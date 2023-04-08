@@ -19,21 +19,16 @@ function fish_prompt
     printf '%s' (prompt_pwd)
     set_color normal
 
-    set -l git_prompt (fish_git_prompt '%s')
-    if test -n $git_prompt
+    set -l is_git_repo (git rev-parse --is-inside-work-tree 2>/dev/null)
+    if test -n "$is_git_repo"
         set_color cyan
-        set -l push_pull_status ""
         set -l cur_branch (git rev-parse --abbrev-ref HEAD)
         set -l upstream (git rev-parse --abbrev-ref --symbolic-full-name @{u})
         set -l change_matrix (git rev-list --left-right --count $cur_branch...$upstream | string split \t)
         set -l npush $change_matrix[1]
         set -l npull $change_matrix[2]
         set -l nchanges (git status --porcelain | wc -l)
-        #set -l git_status (git status --porcelain)
-        #if test -n "$git_status"
-        #    set git_prompt "$git_prompt x"
-        #end
-        printf " ($git_prompt"
+        printf " ($cur_branch"
         if test $npush -gt 0
             set_color blue
             printf " ↑$npush"
